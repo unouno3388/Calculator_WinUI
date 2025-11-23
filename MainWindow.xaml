@@ -1,0 +1,73 @@
+<Window
+    x:Class="Calculator.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Calculator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Calculator">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- 顯示螢幕 -->
+        <Border Grid.Row="0" Padding="12,24" Background="Transparent">
+            <TextBlock x:Name="ResultDisplay" 
+                       Text="0" 
+                       FontSize="64" 
+                       HorizontalAlignment="Right" 
+                       VerticalAlignment="Bottom"
+                       Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+        </Border>
+
+        <!-- 按鈕區 -->
+        <Grid Grid.Row="1" Margin="2,0,2,2" Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 第一排: %, C, Backspace, ÷ (新增) -->
+            <!-- 調整：移除 AC，將 Backspace 左移，右上角放入除法 -->
+            <Button x:Name="ButtonPercent"   Content="%"  Grid.Row="0" Grid.Column="0" Style="{StaticResource CalculatorButtonStyle}" />
+            <Button x:Name="ButtonClear"     Content="C"  Grid.Row="0" Grid.Column="1" Style="{StaticResource CalculatorButtonStyle}" />
+            <Button x:Name="ButtonBackspace" Grid.Row="0" Grid.Column="2" Style="{StaticResource CalculatorButtonStyle}">
+                <FontIcon Glyph="&#xE751;" />
+            </Button>
+            <Button x:Name="ButtonDivide"    Content="÷"  Grid.Row="0" Grid.Column="3" Style="{StaticResource CalculatorOperationButtonStyle}" />
+
+            <!-- 第二排: 7, 8, 9, × -->
+            <Button x:Name="Button7"        Content="7" Grid.Row="1" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="Button8"        Content="8" Grid.Row="1" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="Button9"        Content="9" Grid.Row="1" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="ButtonMultiply" Content="×" Grid.Row="1" Grid.Column="3" Style="{StaticResource CalculatorOperationButtonStyle}" />
+
+            <!-- 第三排: 4, 5, 6, - -->
+            <Button x:Name="Button4"     Content="4" Grid.Row="2" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="Button5"     Content="5" Grid.Row="2" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="Button6"     Content="6" Grid.Row="2" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="ButtonMinus" Content="-" Grid.Row="2" Grid.Column="3" Style="{StaticResource CalculatorOperationButtonStyle}" />
+
+            <!-- 第四排: 1, 2, 3, + -->
+            <Button x:Name="Button1"    Content="1" Grid.Row="3" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="Button2"    Content="2" Grid.Row="3" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="Button3"    Content="3" Grid.Row="3" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="ButtonPlus" Content="+" Grid.Row="3" Grid.Column="3" Style="{StaticResource CalculatorOperationButtonStyle}" />
+
+            <!-- 第五排: 0, ., = -->
+            <Button x:Name="Button0"       Content="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="ButtonDecimal" Content="." Grid.Row="4" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" />
+            <Button x:Name="ButtonEquals"  Content="=" Grid.Row="4" Grid.Column="3" Style="{StaticResource CalculatorEqualsButtonStyle}" />
+
+        </Grid>
+    </Grid>
+</Window>
