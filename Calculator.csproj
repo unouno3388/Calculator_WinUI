@@ -13,8 +13,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="view\ProgrammerCalculator.xaml" />
-    <None Remove="view\StandardCalculator.xaml" />
+    <None Remove="View\ProgrammerCalculator.xaml" />
+    <None Remove="View\StandardCalculator.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,10 +44,10 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251106002" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="view\ProgrammerCalculator.xaml">
+    <Page Update="View\ProgrammerCalculator.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="view\StandardCalculator.xaml">
+    <Page Update="View\StandardCalculator.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
