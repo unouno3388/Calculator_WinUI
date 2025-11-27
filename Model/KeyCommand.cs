@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Input;
+using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -28,7 +30,8 @@ namespace KeyCommand
         public interface IOperation
         {
             //void Execute();
-            void Execute(FrameworkElement element);
+            //void Execute(FrameworkElement element);
+            string Execute(string op);
         }
         public class OperationRegistry
         {
@@ -61,21 +64,22 @@ namespace KeyCommand
         public class EqualOperation : IOperation
         {
 
-            public void Execute(FrameworkElement element)
+            public string Execute(string op)
             {
                 //EvaluateRPN(TokenizeExpression(op));
-                if (element is TextBlock textBlock)
-                {
+                //if (element is TextBlock textBlock)
+                //{
                     try
                     {
-                        textBlock.Text += " = " + EvaluateRPN(ShuntingYard.ConvertToPostfix(TokenizeExpression(textBlock.Text))).ToString("0.#########");
+                        op += " = " + EvaluateRPN(ShuntingYard.ConvertToPostfix(TokenizeExpression(op))).ToString("0.#########");
                     }
                     catch (Exception ex)
                     {
-                        textBlock.Text = "Error";
+                        op = "Error";
                         //MessageBox.Show(ex.ToString());
                     }
-                }
+                return op;
+                //}
             }
             public static List<string> TokenizeExpression(string expression)
             {
@@ -242,28 +246,25 @@ namespace KeyCommand
         }
         public class ACOperation : IOperation
         {
-            public void Execute(FrameworkElement element)
+            public string Execute(string op)
             {
-                if (element is TextBlock textBlock)
-                {
-                    textBlock.Text = "";
-
-                }
-                // Implementation for AC operation
+                 return op = "";
             }
         }
 
         public class BackOperation : IOperation
         {
-            public void Execute(FrameworkElement element)
+            public string Execute(string op)
             {
-                if (element is TextBlock textBlock)
+                try
                 {
-                    if (textBlock.Text.Length > 0)
-                    {
-                        textBlock.Text = textBlock.Text[..^1];
-                    }
+                    op = op[..^1];
                 }
+                catch 
+                {
+                    op = "";
+                }
+                return op;
                 // Implementation for Back operation
             }
         }
@@ -307,6 +308,44 @@ namespace KeyCommand
                     }
                 }
             }
+
+            public string Execute(string op)
+            {
+                char[] operators = new char[] { '+', '-', '*', '/' };
+
+                string text = op;
+                if (text.Length == 0) return "";
+                // 找到最後一個運算子的位置
+                int lastOperatorIndex = -1;
+                for (int i = text.Length - 1; i >= 0; i--)
+                {
+                    if (operators.Contains(text[i]))
+                    {
+                        lastOperatorIndex = i;
+                        break;
+                    }
+                }
+                // 如果找到了運算子，計算百分比
+                if (lastOperatorIndex != -1 && lastOperatorIndex < text.Length - 1)
+                {
+                    string numberStr = text[(lastOperatorIndex + 1)..];
+                    if (double.TryParse(numberStr, out double number))
+                    {
+                        double percentageValue = number / 100.0;
+                        op = text[..(lastOperatorIndex + 1)] + percentageValue.ToString();
+                    }
+                }
+                else    // 如果沒有運算子，則對整個數字計算百分比
+                {
+                    if (double.TryParse(text, out double number))
+                    {
+                        double percentageValue = number / 100.0;
+                        op = percentageValue.ToString();
+                    }
+                }            
+                return op;
+            }
         }
     }
 }
+
