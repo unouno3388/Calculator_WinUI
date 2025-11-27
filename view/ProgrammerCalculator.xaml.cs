@@ -10,6 +10,7 @@ namespace Calculator
     public sealed partial class ProgrammerCalculator : Page
     {
 
+
         public ProgrammerCalculator()
         {
             this.InitializeComponent();
