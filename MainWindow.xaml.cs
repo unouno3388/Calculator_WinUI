@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,8 +13,8 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
-using Viewmodel;
-using keyCMD = KeyCommand.KeyCommand;
+using ViewModel;
+//using keyCMD = KeyCommand.KeyCommand;
 using System.Runtime.Serialization.DataContracts;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,63 +31,69 @@ namespace Calculator
         public static string Formula;
         delegate void UpdateDisplayDelegate(string text);
         UpdateDisplayDelegate updateDisplay ;
-        public ButtonViewModel ButtonViewModel { get; } = new ButtonViewModel();
+        public StanderViewModel ButtonViewModel { get; } = new StanderViewModel();
 
         public MainWindow()
         {
             InitializeComponent();
-            Title = "�p��L"; // �]�w�������D
-            
-            //keyCMD.OperationRegistry registry = new keyCMD.OperationRegistry();
-            //registry.RegisterOperation(keyCMD.OperationType.Equal, new keyCMD.EqualOperation());
-            //registry.RegisterOperation(keyCMD.OperationType.AC, new keyCMD.ACOperation());
-            //registry.RegisterOperation(keyCMD.OperationType.Back, new keyCMD.BackOperation());
-            //registry.RegisterOperation(keyCMD.OperationType.Percentage, new keyCMD.PercentageOperation());
-            //Keyevent();
-        }
-        private void Keyevent()
-        {
-            
-            Formula = "";
-            keyCMD.OperationType Operation;
-            TextBlock Display = new TextBlock();
-            
-            ButtonEquals.Click += (s, e) =>
-            {
-                Operation = keyCMD.OperationType.Equal;
-                //Formula = ResultDisplay.Text;         
-                Display.Text = ButtonViewModel.DisplayText;
-                //keyCMD.OperationRegistry.GetOperation(Operation).Execute(Display);
+            Title = "小算盤"; // 設定視窗標題
 
+            // 處理程式啟動時的初始化
+            NavView.Loaded += (s, e) =>
+            {
+                // 取得綁定在介面上的 ViewModel
+                if (RootGrid.DataContext is StanderViewModel vm && vm.MenuItems.Count > 0)
+                {
+                    // 1. 設定選單選中第一項 (標準型)
+                    var firstItem = vm.MenuItems[0];
+                    NavView.SelectedItem = firstItem;
+
+                    // 2. 直接呼叫導航邏輯 (不需要偽造事件參數)
+                    NavigateToView(firstItem);
+                }
             };
-            //ButtonClear.Click += (s, e) =>
-            //{
-            //    Operation = keyCMD.OperationType.AC;
-            //    ButtonViewModel.DisplayText = "";
-            //    Display.Text = ButtonViewModel.DisplayText;
-            //    keyCMD.OperationRegistry.GetOperation(Operation).Execute(Display);
-            //};
-            //ButtonBackspace.Click += (s, e) =>
-            //{
-            //    Operation = keyCMD.OperationType.Back;
-            //    Display.Text = ButtonViewModel.DisplayText;
-            //    keyCMD.OperationRegistry.GetOperation(Operation).Execute(Display);
-            //};
-            //ButtonPercent.Click += (s, e) =>
-            //{
-            //    Operation = keyCMD.OperationType.Percentage;
-            //    Display.Text = ButtonViewModel.DisplayText;
-            //    keyCMD.OperationRegistry.GetOperation(Operation).Execute(Display);
-            //};
-            //KeyDown += (s, e) =>
-            //{
-            //    if (e.KeyCode == Keys.NumPad1) { }
-            //    switch (e.KeyCode)
-            //    {
-            //        case Keys.Enter: buttonEq.PerformClick(); break;
-            //        case Keys.Escape: buttonAC.PerformClick(); break;
-            //    }
-            //};
+
+        }
+        // 當使用者點擊選單時觸發
+        private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            // 從事件參數中取得被選中的項目
+            if (args.SelectedItem is CalculatorMenuItem selectedItem)
+            {
+                NavigateToView(selectedItem);
+            }
+        }
+
+        // 🔥 核心修改：將導航邏輯獨立出來，讓大家都能呼叫
+        private void NavigateToView(CalculatorMenuItem item)
+        {
+            if (item == null) return;
+
+            switch (item.Type)
+            {
+                case "Standard":
+                    // 導航到標準計算機
+                    // 檢查是否重複導航，避免無謂的重新載入
+                    if (ContentFrame.CurrentSourcePageType != typeof(StandardCalculator))
+                    {
+                        ContentFrame.Navigate(typeof(StandardCalculator));
+                    }
+                    break;
+
+                case "Programmer":
+                    // 導航到程式設計師計算機
+                    if (ContentFrame.CurrentSourcePageType != typeof(ProgrammerCalculator))
+                    {
+                        ContentFrame.Navigate(typeof(ProgrammerCalculator));
+                    }
+                    break;
+            }
+
+            // 更新 ViewModel 的標題 (左上角文字)
+            if (RootGrid.DataContext is StanderViewModel vm)
+            {
+                vm.CurrentCalculatorType = item.Name;
+            }
         }
     }
 }
