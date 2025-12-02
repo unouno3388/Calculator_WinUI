@@ -66,9 +66,9 @@ namespace Model
                 //ProgrammerExpressionProcessor pm;
                 try
                 {
-                    op = ProgrammerExpressionProcessor.instance.EvaluateRPN(
+                    op = ((int)ProgrammerExpressionProcessor.instance.EvaluateRPN(
                          ProgrammerExpressionProcessor.instance.ConvertToPostfix(
-                         ProgrammerExpressionProcessor.instance.TokenizeExpression(op))).ToString("0.#########");
+                         ProgrammerExpressionProcessor.instance.TokenizeExpression(op)))).ToString();
                     //Debug.WriteLine("Result: " + processor.TokenizeExpression(op));
                     //processor.ConvertToPostfix(processor.TokenizeExpression(op)).ForEach(t => op+=t);
                     //op = 
@@ -77,6 +77,7 @@ namespace Model
                 catch (Exception ex)
                 {
                     op = "Error";
+                    Debug.WriteLine("EqualOperation"+ ex.ToString());
                     //MessageBox.Show(ex.ToString());
                 }
                 return op;

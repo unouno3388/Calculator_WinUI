@@ -5,13 +5,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:ViewModel"
-    mc:Ignorable="d">
+    xmlns:local="using:Calculator.Converters"
+    mc:Ignorable="d"
+    x:Name="Root"
+    d:DataContext="{d:DesignInstance Type=vm:ProgrammerViewModel, IsDesignTimeCreatable=True}">
 
+    <!--<Page.Resources>
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    </Page.Resources>-->
     
-    <UserControl.DataContext>
+    <!--<UserControl.DataContext>
         <vm:ProgrammerViewModel />
-    </UserControl.DataContext>
-
+    </UserControl.DataContext>-->
+    
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -28,7 +34,12 @@
                    Margin="0,10,12,0"/>
 
         <StackPanel Grid.Row="1" Margin="12,10" Spacing="4">
-            <RadioButton GroupName="Radix" IsChecked="{Binding IsHexMode, Mode=TwoWay}" Tag="16" Content="HEX" Style="{StaticResource DefaultRadioButtonStyle}">
+            <RadioButton GroupName="Radix" Tag="16" Content="HEX" Style="{StaticResource DefaultRadioButtonStyle}"
+                         IsChecked="{x:Bind 
+                                     IsModeChecked(ViewModel.CurrentBitDisplayModeInt,'16'), 
+                                     Mode=OneWay }"
+                         Checked="ModeRadioButton_Checked" >
+                
                 <RadioButton.ContentTemplate>
                     <DataTemplate>
                         <Grid Width="300">
@@ -39,7 +50,11 @@
                 </RadioButton.ContentTemplate>
             </RadioButton>
 
-            <RadioButton GroupName="Radix" IsChecked="{Binding IsDecMode, Mode=TwoWay}" Tag="10" Content="DEC">
+            <RadioButton GroupName="Radix" Tag="10" Content="DEC"
+                         IsChecked="{x:Bind 
+                                     IsModeChecked(ViewModel.CurrentBitDisplayModeInt,'10'), 
+                                     Mode=OneWay }"
+                         Checked="ModeRadioButton_Checked" >
                 <RadioButton.ContentTemplate>
                     <DataTemplate>
                         <Grid Width="300">
@@ -50,7 +65,11 @@
                 </RadioButton.ContentTemplate>
             </RadioButton>
 
-            <RadioButton GroupName="Radix" IsChecked="{Binding IsOctMode, Mode=TwoWay}" Tag="8" Content="OCT">
+            <RadioButton GroupName="Radix" Tag="8" Content="OCT" 
+                         IsChecked="{x:Bind 
+                                     IsModeChecked(ViewModel.CurrentBitDisplayModeInt,'8'), 
+                                     Mode=OneWay }"
+                         Checked="ModeRadioButton_Checked" >
                 <RadioButton.ContentTemplate>
                     <DataTemplate>
                         <Grid Width="300">
@@ -61,7 +80,11 @@
                 </RadioButton.ContentTemplate>
             </RadioButton>
 
-            <RadioButton GroupName="Radix" IsChecked="{Binding IsBinMode, Mode=TwoWay}" Tag="2" Content="BIN">
+            <RadioButton GroupName="Radix" Tag="2" Content="BIN" 
+                         IsChecked="{x:Bind 
+                                     IsModeChecked(ViewModel.CurrentBitDisplayModeInt,'2'), 
+                                     Mode=OneWay }"
+                         Checked="ModeRadioButton_Checked" >
                 <RadioButton.ContentTemplate>
                     <DataTemplate>
                         <Grid Width="300">
@@ -108,7 +131,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="A" Grid.Row="0" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="A" IsEnabled="{Binding IsHexMode}"/>
+            <Button Content="A" Grid.Row="0" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="A" IsEnabled="{x:Bind IsHex(ViewModel.CurrentBitDisplayModeInt), Mode=OneWay}"/>
             <Button Content="&lt;&lt;" Grid.Row="0" Grid.Column="1" Style="{StaticResource CalculatorButtonStyle}" Command="{Binding BitwiseCommand}" CommandParameter="LSH"/>
             <Button Content="&gt;&gt;" Grid.Row="0" Grid.Column="2" Style="{StaticResource CalculatorButtonStyle}" Command="{Binding BitwiseCommand}" CommandParameter="RSH"/>
             <Button Content="C" Grid.Row="0" Grid.Column="3" Style="{StaticResource CalculatorButtonStyle}" Command="{Binding ACClickCommand}"/>
@@ -116,31 +139,31 @@
                 <FontIcon Glyph="&#xE751;" FontSize="16"/>
             </Button>
 
-            <Button Content="B" Grid.Row="1" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="B" IsEnabled="{Binding IsHexMode}"/>
+            <Button Content="B" Grid.Row="1" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="B" IsEnabled="{x:Bind IsHex(ViewModel.CurrentBitDisplayModeInt), Mode=OneWay}"/>
             <Button Content="(" Grid.Row="1" Grid.Column="1" Style="{StaticResource CalculatorButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="("/>
             <Button Content=")" Grid.Row="1" Grid.Column="2" Style="{StaticResource CalculatorButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter=")"/>
             <Button Content="%" Grid.Row="1" Grid.Column="3" Style="{StaticResource CalculatorButtonStyle}" Command="{Binding PercentageClickCommand}"/>
-            <Button Content="/" Grid.Row="1" Grid.Column="4" Style="{StaticResource CalculatorOperationButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="/"/>
+            <Button Content="/" Grid.Row="1" Grid.Column="4" Style="{StaticResource CalculatorOperationButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="/" IsEnabled="False"/>
 
-            <Button Content="C" Grid.Row="2" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="C" IsEnabled="{Binding IsHexMode}"/>
+            <Button Content="C" Grid.Row="2" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="C" IsEnabled="{x:Bind IsHex(ViewModel.CurrentBitDisplayModeInt), Mode=OneWay}"/>
             <Button Content="7" Grid.Row="2" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="7"/>
             <Button Content="8" Grid.Row="2" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="8"/>
             <Button Content="9" Grid.Row="2" Grid.Column="3" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="9"/>
             <Button Content="*" Grid.Row="2" Grid.Column="4" Style="{StaticResource CalculatorOperationButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="*"/>
 
-            <Button Content="D" Grid.Row="3" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="D" IsEnabled="{Binding IsHexMode}"/>
+            <Button Content="D" Grid.Row="3" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="D" IsEnabled="{x:Bind IsHex(ViewModel.CurrentBitDisplayModeInt), Mode=OneWay}"/>
             <Button Content="4" Grid.Row="3" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="4"/>
             <Button Content="5" Grid.Row="3" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="5"/>
             <Button Content="6" Grid.Row="3" Grid.Column="3" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="6"/>
             <Button Content="-" Grid.Row="3" Grid.Column="4" Style="{StaticResource CalculatorOperationButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="-"/>
 
-            <Button Content="E" Grid.Row="4" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="E" IsEnabled="{Binding IsHexMode}"/>
+            <Button Content="E" Grid.Row="4" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="E" IsEnabled="{x:Bind IsHex(ViewModel.CurrentBitDisplayModeInt), Mode=OneWay}"/>
             <Button Content="1" Grid.Row="4" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="1"/>
             <Button Content="2" Grid.Row="4" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="2"/>
             <Button Content="3" Grid.Row="4" Grid.Column="3" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="3"/>
             <Button Content="+" Grid.Row="4" Grid.Column="4" Style="{StaticResource CalculatorOperationButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="+"/>
 
-            <Button Content="F" Grid.Row="5" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="F" IsEnabled="{Binding IsHexMode}"/>
+            <Button Content="F" Grid.Row="5" Grid.Column="0" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="F" IsEnabled="{x:Bind IsHex(ViewModel.CurrentBitDisplayModeInt), Mode=OneWay}"/>
             <Button Content="+/-" Grid.Row="5" Grid.Column="1" Style="{StaticResource CalculatorNumberButtonStyle}"/>
             <Button Content="0" Grid.Row="5" Grid.Column="2" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="0"/>
             <Button Content="." Grid.Row="5" Grid.Column="3" Style="{StaticResource CalculatorNumberButtonStyle}" Command="{Binding ButtonClickCommand}" CommandParameter="." IsEnabled="False"/>

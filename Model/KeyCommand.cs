@@ -253,20 +253,45 @@ namespace Model
         // 中綴 (Tokens) 轉換為後綴 (Tokens)
 
         // 統一解析數字的方法
+        //public bool TryParseNumber(string token, out double result)
+        //{
+        //    // 如果是 16 進位
+        //    if (CurrentBase == NumberBase.Hexadecimal)
+        //    {
+        //        // 16 進位通常是整數運算
+        //        try
+        //        {
+        //            // 使用 Convert.ToInt64 才能解析 A-F
+        //            long hexVal = Convert.ToInt64(token, 16);
+        //            result = (double)hexVal; // 轉回 double 以便相容你現有的 Stack<double>
+        //            return true;
+        //        }
+        //        catch
+        //        {
+        //            result = 0;
+        //            return false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // 原本的 10 進位處理
+        //        return double.TryParse(token, out result);
+        //    }
+        //}
+        // 在 KeyCommand.cs 的 ExpressionProcessor 類別中
+
         public bool TryParseNumber(string token, out double result)
         {
             // 如果是 16 進位
             if (CurrentBase == NumberBase.Hexadecimal)
             {
-                // 16 進位通常是整數運算
-                try
+                // 🌟 修改：使用 TryParse 避免 FormatException 異常拋出
+                if (long.TryParse(token, System.Globalization.NumberStyles.HexNumber, null, out long hexVal))
                 {
-                    // 使用 Convert.ToInt64 才能解析 A-F
-                    long hexVal = Convert.ToInt64(token, 16);
                     result = (double)hexVal; // 轉回 double 以便相容你現有的 Stack<double>
                     return true;
                 }
-                catch
+                else
                 {
                     result = 0;
                     return false;
