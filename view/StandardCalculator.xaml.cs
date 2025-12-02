@@ -12,6 +12,7 @@ namespace Calculator
     {
         public StandardCalculator()
         {
+
             this.InitializeComponent();
         }
     }

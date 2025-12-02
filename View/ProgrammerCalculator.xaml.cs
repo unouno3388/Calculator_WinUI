@@ -13,6 +13,7 @@ namespace Calculator
 
         public ProgrammerCalculator()
         {
+
             this.InitializeComponent();
         }
     }
